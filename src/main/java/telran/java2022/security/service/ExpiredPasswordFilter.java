@@ -10,6 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
@@ -22,9 +23,9 @@ public class ExpiredPasswordFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
-		Principal principal = request.getUserPrincipal();
-		if (principal != null && checkEndPoint(request.getMethod(), request.getServletPath())) {
-			UserProfile userProfile = (UserProfile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && checkEndPoint(request.getMethod(), request.getServletPath())) {
+			UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 			if(!userProfile.isPasswordNotExpired()) {
 				response.sendError(403, "password expired");
 				return;

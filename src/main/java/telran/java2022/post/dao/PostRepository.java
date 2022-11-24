@@ -15,4 +15,5 @@ public interface PostRepository extends CrudRepository<Post, String> {
 
 	Stream<Post> findByDateCreatedBetween(LocalDate from, LocalDate to);
 
+
 }
